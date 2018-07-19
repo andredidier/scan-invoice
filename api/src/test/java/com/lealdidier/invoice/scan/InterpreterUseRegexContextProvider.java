@@ -20,9 +20,28 @@ public class InterpreterUseRegexContextProvider implements TestTemplateInvocatio
 
     @Override
     public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext extensionContext) {
-        List<String> data = new ArrayList<>();
-        Supplier<MemoryInterpreter> memoryInterpreterSupplier = () -> new MemoryInterpreter(data);
-        Supplier<Consumer<String>> verifierSupplier = () -> ((regex) -> assertEquals(regex, data.get(0)));
-        return Stream.of(new MemoryInterpreterInvocationContext(memoryInterpreterSupplier, verifierSupplier));
+        List<String> data1 = new ArrayList<>();
+        Supplier<Consumer<String>> verifierSupplier1 = () -> ((regex) -> {
+            assertEquals(1, data1.size());
+            assertEquals(regex, data1.get(0));
+        });
+
+        List<String> data2 = new ArrayList<>();
+        data2.add("regex1");
+        data2.add("regex2");
+        List<String> initialData2 = new ArrayList<>(data2);
+        Supplier<Consumer<String>> verifierSupplier2 = () -> ((regex) -> {
+            if (initialData2.contains(regex)) {
+                assertEquals(2, data2.size());
+                assertEquals(regex, data2.get(data2.indexOf(regex)));
+            } else {
+                assertEquals(3, data2.size());
+                assertEquals(regex, data2.get(2));
+            }
+        });
+
+
+        return Stream.of(new MemoryInterpreterInvocationContext(verifierSupplier1, data1),
+                new MemoryInterpreterInvocationContext(verifierSupplier2, data2));
     }
 }
