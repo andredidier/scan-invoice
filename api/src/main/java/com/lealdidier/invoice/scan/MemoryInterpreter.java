@@ -19,6 +19,9 @@ public class MemoryInterpreter implements Interpreter {
 
     @Override
     public void use(String regexPattern) {
+        if (regularExpressions.contains(regexPattern)) {
+            return;
+        }
         regularExpressions.add(regexPattern);
     }
 

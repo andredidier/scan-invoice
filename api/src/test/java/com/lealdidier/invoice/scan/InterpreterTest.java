@@ -17,85 +17,50 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 @DisplayName("Interpreter implementations test")
 public class InterpreterTest {
 
+    @DisplayName("Register regular expression for later use")
     @TestTemplate
     @ExtendWith(InterpreterUseRegexContextProvider.class)
-    public void testUseRegularExpressionNew(Interpreter interpreter, Consumer<String> verifier) {
-        String regex = "regex1";
+    public void testUseRegularExpression(Interpreter interpreter, Consumer<String> verifier) {
+        String regex = "mynewregex";
         interpreter.use(regex);
         verifier.accept(regex);
     }
 
-    @DisplayName("Register regular expression for later use")
-    @ParameterizedTest(name = "[{index}] {0}, {1}")
-    @MethodSource("interpretersForUseTest")
-    public void testUseRegularExpression(Supplier<Interpreter> interpreter, Consumer<String> verifier, String regex) {
-        interpreter.get().use(regex);
+    @DisplayName("Register an existing regular expressions")
+    @TestTemplate
+    @ExtendWith(InterpreterUseRegexContextProvider.class)
+    public void testUseExistingRegularExpression(Interpreter interpreter, Consumer<String> verifier, List<String> initialData) {
+        if (initialData.isEmpty()) {
+            return;
+        }
+        String regex = initialData.get(0);
+        interpreter.use(regex);
         verifier.accept(regex);
     }
 
     @DisplayName("Remove regular expression")
-    @ParameterizedTest(name = "[{index}] {0}, {1}")
-    @MethodSource("interpretersForStopUsingTest")
-    public void testStopUsingRegularExpression(Supplier<Interpreter> interpreter, Consumer<String> verifier, String regex) {
-        interpreter.get().stopUsing(regex);
+    @TestTemplate
+    @ExtendWith(InterpreterStopUsingRegexContextProvider.class)
+    public void testStopUsingRegularExpression(Interpreter interpreter, Consumer<String> verifier,
+                                                  String... regularExpressions) {
+        assumeTrue(regularExpressions.length > 0);
+        String regex = regularExpressions[0];
+        interpreter.stopUsing(regex);
         verifier.accept(regex);
     }
 
-    @DisplayName("All regular expressions")
-    @ParameterizedTest(name = "[{index}] {0}")
-    @MethodSource("interpretersForAllRegularExpressionsTest")
-    public void testGetAllRegularExpressions(Supplier<Interpreter> interpreter, Consumer<List<String>> verifier) {
-        verifier.accept(interpreter.get().usedRegularExpressions());
-    }
-
-    public static Stream<? extends Arguments> interpretersForAllRegularExpressionsTest() {
-        List<String> regexs = new ArrayList<>();
-        regexs.add("regex1");
-        regexs.add("regex2");
-
-        Map<Supplier<Interpreter>, Consumer<List<String>>> verifiers = new HashMap<>();
-        verifiers.put(() -> new MemoryInterpreter(regexs), (rs) -> assertEquals(regexs, rs));
-        verifiers.put(() -> new SqlInterpreter(), (rs) -> fail("Not implemented yet"));
-
-        return verifiers.keySet().stream()
-                .map((interpreter) -> Stream.of(Arguments.of(interpreter, verifiers.get(interpreter))))
-                .flatMap((args)->args);
-    }
-
-    public static Stream<? extends Arguments> interpretersForUseTest() {
-        List<String> regexs = new ArrayList<>();
-        Consumer<String> regexsListVerifier = (r) -> assertEquals(r, regexs.get(0));
-        Consumer<String> sqlVerifier = (r) -> fail("Not implemented yet");
-
-        Map<Supplier<Interpreter>, Consumer<String>> verifiers = new HashMap<>();
-        verifiers.put(() -> new MemoryInterpreter(regexs), regexsListVerifier);
-        verifiers.put(() -> new SqlInterpreter(), sqlVerifier);
-        return interpretersForTest(verifiers);
-    }
-    public static Stream<? extends Arguments> interpretersForStopUsingTest() {
-        List<String> regexs = new ArrayList<>();
-        regexs.add("regex1");
-
-        Consumer<String> regexsListVerifier = (r) -> assertTrue(regexs.isEmpty());
-        Consumer<String> sqlVerifier = (r) -> fail("Not implemented yet");
-
-        Map<Supplier<Interpreter>, Consumer<String>> verifiers = new HashMap<>();
-        verifiers.put(() -> new MemoryInterpreter(regexs), regexsListVerifier);
-        verifiers.put(() -> new SqlInterpreter(), sqlVerifier);
-        return interpretersForTest(verifiers);
-    }
-
-    public static <T> Stream<? extends Arguments> interpretersForTest(Map<Supplier<Interpreter>, Consumer<T>> verifiers) {
-        Function<Supplier<Interpreter>, Stream<Arguments>> params =
-                (interpreter) -> Stream.of(
-                        Arguments.of(interpreter, verifiers.get(interpreter), "regex1"),
-                        Arguments.of(interpreter, verifiers.get(interpreter), "regex2")
-                );
-
-        return verifiers.keySet().stream().map(params).flatMap((args)->args);
+    //@DisplayName("All regular expressions")
+    //@TestTemplate
+    //@ExtendWith(InterpreterGetaAllRegexContextProvider.class)
+    public void testGetAllRegularExpressionsNew(Interpreter interpreter, Consumer<String> verifier,
+                                                  String... regularExpressions) {
+        String regex = regularExpressions[0];
+        interpreter.stopUsing(regex);
+        verifier.accept(regex);
     }
 }
