@@ -1,4 +1,4 @@
-package com.lealdidier.invoice.scan;
+package com.lealdidier.invoice.scan.old;
 
 import org.junit.jupiter.api.extension.*;
 
@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 
 public class MemoryInterpreterInvocationContext implements TestTemplateInvocationContext {
-
+/*
     private Supplier<MemoryInterpreter> memoryInterpreter;
     private Supplier<Consumer<String>> verifier;
     private String[] initialRegularExpressions;
@@ -27,17 +27,18 @@ public class MemoryInterpreterInvocationContext implements TestTemplateInvocatio
                                               List<String> data) {
         this(() -> new MemoryInterpreter(data), verifier, data.toArray(new String[]{}));
     }
-
+*/
 
 
     @Override
     public String getDisplayName(int invocationIndex) {
-        return String.format("[%d] MemoryInterpreter, initial: %d", invocationIndex, initialRegularExpressions.length);
+        //return String.format("[%d] MemoryInterpreter, initial: %d", invocationIndex, initialRegularExpressions.length);
+        return null;
     }
 
     @Override
     public List<Extension> getAdditionalExtensions() {
-
+/*
         ParameterResolver mipr = new ParameterResolver() {
             @Override
             public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
@@ -92,5 +93,7 @@ public class MemoryInterpreterInvocationContext implements TestTemplateInvocatio
         resolvers.add(initialList);
 
         return resolvers;
+        */
+        return null;
     }
 }
