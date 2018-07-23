@@ -1,13 +1,14 @@
 package com.lealdidier.invoice.scan;
 
 import com.google.gson.Gson;
-import com.lealdidier.invoice.scan.regularexpression.*;
+import com.lealdidier.invoice.scan.v1.ScanInvoiceV1;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.util.logging.Logger.getLogger;
-import static spark.Spark.*;
+import static spark.Spark.path;
+import static spark.Spark.port;
 
 public class ScanInvoiceApi {
 
@@ -15,7 +16,10 @@ public class ScanInvoiceApi {
 
     public static void main(String[] args) {
         Gson gson = new Gson();
+        ScanInvoiceV1 v1 = new ScanInvoiceV1();
         setUpPort(args);
+        path("/v1", v1::methods);
+        /*
         path("/v1", () -> {
             before("/*", (req, res) -> logger.info("Calling API v1"));
             get("/regularexpressions", GetRegularExpressions::get, gson::toJson);
@@ -30,6 +34,7 @@ public class ScanInvoiceApi {
                 get("/:id", GetRegularExpression::get);
             });
         });
+        */
     }
 
 

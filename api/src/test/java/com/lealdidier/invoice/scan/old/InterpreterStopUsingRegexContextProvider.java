@@ -1,4 +1,4 @@
-package com.lealdidier.invoice.scan;
+package com.lealdidier.invoice.scan.old;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -22,11 +22,14 @@ public class InterpreterStopUsingRegexContextProvider implements TestTemplateInv
 
     @Override
     public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext extensionContext) {
+        /*
         String[] data = { "regex1", "regex2" };
         List<String> list = new ArrayList<>(Arrays.asList(data));
         Supplier<MemoryInterpreter> memoryInterpreterSupplier = () -> new MemoryInterpreter(list);
         Supplier<Consumer<String>> verifierSupplier = () -> ((regex) -> assertFalse(list.contains(regex)));
 
         return Stream.of(new MemoryInterpreterInvocationContext(memoryInterpreterSupplier, verifierSupplier, data));
+        */
+        return null;
     }
 }

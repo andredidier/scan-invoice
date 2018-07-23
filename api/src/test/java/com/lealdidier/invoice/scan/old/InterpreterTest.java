@@ -1,4 +1,4 @@
-package com.lealdidier.invoice.scan;
+package com.lealdidier.invoice.scan.old;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 @DisplayName("Interpreter implementations test")
 public class InterpreterTest {
-
+/*
     @DisplayName("Register regular expression for later use")
     @TestTemplate
     @ExtendWith(InterpreterUseRegexContextProvider.class)
@@ -63,4 +63,5 @@ public class InterpreterTest {
         interpreter.stopUsing(regex);
         verifier.accept(regex);
     }
+    */
 }
