@@ -2,6 +2,7 @@ package com.lealdidier.invoice.scan;
 
 import com.google.gson.Gson;
 import com.lealdidier.invoice.scan.v1.ScanInvoiceV1;
+import spark.Spark;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,11 +15,39 @@ public class ScanInvoiceApi {
 
     private final static Logger logger  = getLogger(ScanInvoiceApi.class.getName());
 
-    public static void main(String[] args) {
-        Gson gson = new Gson();
+    private int port;
+
+    public ScanInvoiceApi(int port) {
+        this.port = port;
+    }
+
+    public void start() {
         ScanInvoiceV1 v1 = new ScanInvoiceV1();
-        setUpPort(args);
+        port(port);
         path("/v1", v1::methods);
+        logger.info(String.format("Successfully configured API on port %d", port));
+    }
+    public void stop() {
+        Spark.stop();
+    }
+
+    private static void setUpPort(String[] args) {
+        try {
+            if (args.length == 0) {
+                return;
+            }
+            int portNumber = Integer.parseInt(args[0]);
+            logger.log(Level.FINE, String.format("Port number: %d", portNumber));
+            port(portNumber);
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Given parameter is not a port number", e);
+            throw e;
+        }
+    }
+    public static void main(String[] args) {
+        int portNumber = Integer.parseInt(args[0]);
+        ScanInvoiceApi api = new ScanInvoiceApi(portNumber);
+        api.start();
         /*
         path("/v1", () -> {
             before("/*", (req, res) -> logger.info("Calling API v1"));
@@ -38,18 +67,5 @@ public class ScanInvoiceApi {
     }
 
 
-    private static void setUpPort(String[] args) {
-        try {
-            if (args.length == 0) {
-                return;
-            }
-            int portNumber = Integer.parseInt(args[0]);
-            logger.log(Level.FINE, String.format("Port number: %d", portNumber));
-            port(portNumber);
-        } catch (NumberFormatException e) {
-            logger.log(Level.SEVERE, "Given parameter is not a port number", e);
-            throw e;
-        }
-    }
 
 }

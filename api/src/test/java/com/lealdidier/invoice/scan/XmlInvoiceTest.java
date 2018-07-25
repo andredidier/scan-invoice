@@ -1,20 +1,19 @@
 package com.lealdidier.invoice.scan;
 
+import com.lealdidier.io.*;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,11 +26,12 @@ public class XmlInvoiceTest {
     public void testSimple(String xmlFile, String jsonFile) throws IOException, URISyntaxException {
         try(InputStream fis = getClass().getResourceAsStream(xmlFile)) {
             Input<Source> s = new ScalarInput<>(new StreamSource(fis));
-            TransformerFileInput t = new TransformerFileInput(getClass().getResource("/nfce-pe-to-json.xsl").getFile());
+            Input<Transformer> t = new SourceTransformerInput(new UrlSourceInput(new ResourceUrlInput("/nfce-pe-to-json.xsl", getClass())));
             XmlInvoice xmlInvoice = new XmlInvoice(s, t);
 
-            JSONObject expected = new JSONObject(String.join("\n",
-                    Files.readAllLines(Paths.get(getClass().getResource(jsonFile).toURI()))));
+            JSONObject expected = new JSONObject(
+                    new UrlStringInput(new ResourceUrlInput(jsonFile, getClass()), "UTF-8").read()
+            );
             assertEquals(expected.toString(), xmlInvoice.toJson().toString());
         }
     }

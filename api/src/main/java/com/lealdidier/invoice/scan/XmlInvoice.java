@@ -1,5 +1,6 @@
 package com.lealdidier.invoice.scan;
 
+import com.lealdidier.io.Input;
 import org.json.JSONObject;
 
 import javax.xml.transform.Source;

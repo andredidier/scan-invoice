@@ -1,4 +1,6 @@
-package com.lealdidier.invoice.scan;
+package com.lealdidier.io;
+
+import com.lealdidier.invoice.scan.Invoice;
 
 import java.util.function.Supplier;
 
