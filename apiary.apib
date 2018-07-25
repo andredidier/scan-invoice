@@ -4,16 +4,50 @@ FORMAT: 1A
 
 Used to scan invoices and generate a JSON that can be used in other APIs.
 
-# Group Interpretation
+# Group Invoice
 
-## Interpret [/interpret]
+## New [/invoice/new]
 
 Interpret a scanned invoice.
 
-### Start interpretation [POST]
+### New [POST]
 
 + Response 200 (application/json)
 
         { 
             "id": "1234" 
         }
+        
+## Existing [/invoice/{id}]
+
+Maintains existing invoices
+
++ Parameters
+    + id (string) - ID of an existing invoice
+
+### Data [GET]
+
++ Response 200 (application/json)
+    
+    + Attributes (Invoice)
+
++ Response 404 (application/json)
+
+    + Attributes (Message)
+
+## Data Structures
+
+### Invoice (object)
++ payee: Engenho Casa Forte (required) - Invoice payee
++ total: 24.5 (required) - Invoice total amount
++ date: `2018-07-18T10:26:07-03:00` (required) - Invoice date
++ items (array[InvoiceItem])
+
+### InvoiceItem (object)
++ memo: Salgados (required) - Item description
++ total: 7.1 (required) - Item total ammount
+
+### Message (object)
++ plain: Invoice is not ready yet (required) - Message text
++ html: Invoice is <b>not</b> ready yet (required) - Formatted text
++ language: pt_BR (required) - Language
