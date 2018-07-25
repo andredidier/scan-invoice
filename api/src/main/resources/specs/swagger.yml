@@ -20,7 +20,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        '202':
           description: Data from invoice.
           content:
             application/json:
@@ -29,7 +29,7 @@ paths:
         '400':
           description: Contents not supported, they do not match the regular expressions supported by this server.
           content:
-            text/html:
+            application/json:
               schema:
                 $ref: '#/components/schemas/message'
   /invoice/:id:
@@ -43,17 +43,64 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/invoice'
+              examples:
+                no-items:
+                  $ref: '#/components/examples/invoice-without-items'
+                with-items:
+                  $ref: '#/components/examples/invoice-with-items'
+        '202':
+          description: Processing invoice.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+              example:
+                plain: Still processing invoice.
+                html: Still processing invoice.
+                language: en_US
+        '404':
+          description: Invoice not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
 
 components:
+  examples:
+    invoice-without-items:
+      payee: Engenho Casa Forte
+      total: 27.5
+      date: 2018-07-22
+    invoice-with-items:
+      payee: Engenho Casa Forte
+      total: 27.5
+      date: 2018-07-22
+      items: [ {memo: Salgados, total: 7.5} ]
+    item1:
+      memo: Salgados
+      total: 7.5
   schemas:
     message:
-      type: string
+      type: object
+      properties:
+        plain:
+          type: string
+        html:
+          type: string
+        language:
+          type: string
+      required:
+        - plain
+        - html
+        - language
+
     invoice-request:
       type: object
       properties:
         id:
           type: string
           format: uuid
+
     invoice:
       type: object
       properties:
