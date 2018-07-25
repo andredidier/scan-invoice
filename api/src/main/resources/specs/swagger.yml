@@ -1,0 +1,79 @@
+openapi: 3.0.0
+
+info:
+  title: Scan Invoice API
+  description: Scans data from an Invoice
+  version: v1
+
+servers:
+  - url: http://localhost:8080/v1
+    description: Local developer environment
+
+paths:
+  /interpret:
+    post:
+      summary: Interprets data from an Invoice
+      operationId: interpret
+      parameters:
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Data from invoice.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invoice-request'
+        '400':
+          description: Contents not supported, they do not match the regular expressions supported by this server.
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/message'
+  /invoice/:id:
+    get:
+      summary: Gets the contents of an invoice.
+      operationId: getInvoice
+      responses:
+        '200':
+          description: Gets the invoice by its id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invoice'
+
+components:
+  schemas:
+    message:
+      type: string
+    invoice-request:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+    invoice:
+      type: object
+      properties:
+        payee:
+          type: string
+        total:
+          type: number
+        date:
+          type: string
+          format: date
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              memo:
+                type: string
+              total:
+                type: number
+      required:
+        - payee
+        - total
+        - date
