@@ -1,4 +1,4 @@
-package com.lealdidier.invoice.scan.v1;
+package com.lealdidier.io;
 
 import java.io.IOException;
 
