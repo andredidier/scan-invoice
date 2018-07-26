@@ -1,7 +1,6 @@
 package com.lealdidier.invoice.scan;
 
-import com.google.gson.Gson;
-import com.lealdidier.invoice.scan.v1.ScanInvoiceV1;
+import com.lealdidier.invoice.scan.rest.ScanInvoiceV1;
 import spark.Spark;
 
 import java.util.logging.Level;

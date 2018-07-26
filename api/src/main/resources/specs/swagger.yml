@@ -6,26 +6,51 @@ info:
   version: v1
 
 servers:
-  - url: http://localhost:8080/v1
+  - url: http://localhost:8080/
     description: Local developer environment
+  - url: {{protocol}}://{{environment}}-scaninvoice.lealdidier.com
+    variables:
+      protocol:
+        default: http
+        enum:
+          - http
+          - https
+      environment:
+        default: test
+        enum:
+          - test
+          - api
 
 paths:
   /interpret:
     post:
       summary: Interprets data from an Invoice
       operationId: interpret
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+        required: true
+        description: The contents to be interpreted.
       parameters:
+        - in: header
+          name: X-Callback-Url
+          schema:
+            type: string
         - in: header
           name: Accept-Language
           schema:
             type: string
       responses:
         '202':
-          description: Data from invoice.
+          description: Obtains the invoice request id. This is returned if the X-Callback-Url is not set.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/invoice-request'
+        '204':
+          description: Spaws a processing thread and calls the callback URL when finishes. This is only returned if the X-Callback-Url is set.
         '400':
           description: Contents not supported, they do not match the regular expressions supported by this server.
           content:

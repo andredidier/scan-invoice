@@ -1,9 +1,7 @@
-package com.lealdidier.invoice.scan.v1;
+package com.lealdidier.invoice.scan.rest;
 
 import com.lealdidier.invoice.scan.ScanInvoiceApi;
 import com.lealdidier.invoice.scan.XmlInvoice;
-import com.lealdidier.io.ResourceUrlInput;
-import com.lealdidier.io.SourceTransformerInput;
 import com.lealdidier.io.TransformerInputOf;
 import com.lealdidier.io.UrlSourceInput;
 
@@ -20,7 +18,7 @@ public class ScanInvoiceV1 {
 
     public void methods() {
         before("/*", (req, res) -> logger.info("Calling API v1"));
-        post("/interpreter", (req, res)-> {
+        post("/interpret", (req, res)-> {
             String contents = new XmlInvoice(
                     new UrlSourceInput(new URL(req.body())),
                     new TransformerInputOf("/nfce-pe-to-json.xsl", getClass())
