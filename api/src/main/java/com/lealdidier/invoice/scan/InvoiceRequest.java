@@ -1,7 +1,8 @@
 package com.lealdidier.invoice.scan;
 
-import java.util.UUID;
+import com.lealdidier.io.Input;
+import com.lealdidier.io.Output;
 
 public interface InvoiceRequest {
-    UUID uuid();
+    void process(Output<Invoice> output);
 }

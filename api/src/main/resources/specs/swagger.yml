@@ -43,12 +43,6 @@ paths:
           schema:
             type: string
       responses:
-        '202':
-          description: Obtains the invoice request id. This is returned if the X-Callback-Url is not set.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/invoice-request'
         '204':
           description: Spaws a processing thread and calls the callback URL when finishes. This is only returned if the X-Callback-Url is set.
         '400':
@@ -118,13 +112,6 @@ components:
         - plain
         - html
         - language
-
-    invoice-request:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
 
     invoice:
       type: object
