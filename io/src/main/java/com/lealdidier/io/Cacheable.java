@@ -2,7 +2,6 @@ package com.lealdidier.io;
 
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
-import org.ehcache.config.Configuration;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ExpiryPolicyBuilder;
@@ -11,18 +10,18 @@ import org.ehcache.config.builders.ResourcePoolsBuilder;
 import java.io.IOException;
 import java.time.Duration;
 
-public class Cacheable<T, R> implements Function<T, R> {
+public class Cacheable<T, R> implements IOFunction<T, R> {
     private final String cacheName;
     private final Class<T> tClass;
     private final Class<R> rClass;
-    private final Function<T,R> inner;
+    private final IOFunction<T,R> inner;
     private final long entries;
-    private final Function<CacheConfigurationBuilder<T,R>, CacheConfigurationBuilder<T,R>> configurationBuilder;
+    private final IOFunction<CacheConfigurationBuilder<T,R>, CacheConfigurationBuilder<T,R>> configurationBuilder;
 
     private static transient CacheManager manager;
 
-    public Cacheable(String cacheName, Class<T> tClass, Class<R> rClass, Function<T, R> inner,
-                     long entries, Function<CacheConfigurationBuilder<T, R>, CacheConfigurationBuilder<T, R>> configurationBuilder) {
+    public Cacheable(String cacheName, Class<T> tClass, Class<R> rClass, IOFunction<T, R> inner,
+                     long entries, IOFunction<CacheConfigurationBuilder<T, R>, CacheConfigurationBuilder<T, R>> configurationBuilder) {
         this.cacheName = cacheName;
         this.tClass = tClass;
         this.rClass = rClass;
@@ -31,11 +30,11 @@ public class Cacheable<T, R> implements Function<T, R> {
         this.configurationBuilder = configurationBuilder;
     }
 
-    public Cacheable(String cacheName, Class<T> tClass, Class<R> rClass, Function<T, R> inner, long entries) {
-        this(cacheName, tClass, rClass, inner, entries, Function.identity());
+    public Cacheable(String cacheName, Class<T> tClass, Class<R> rClass, IOFunction<T, R> inner, long entries) {
+        this(cacheName, tClass, rClass, inner, entries, IOFunction.identity());
     }
 
-    public Cacheable(String cacheName, Class<T> tClass, Class<R> rClass, Function<T, R> inner, long entries, Duration timeToIdle) {
+    public Cacheable(String cacheName, Class<T> tClass, Class<R> rClass, IOFunction<T, R> inner, long entries, Duration timeToIdle) {
         this(cacheName, tClass, rClass, inner, entries, b -> b.withExpiry(ExpiryPolicyBuilder.timeToIdleExpiration(timeToIdle)));
     }
 

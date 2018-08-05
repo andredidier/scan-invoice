@@ -2,11 +2,11 @@ package com.lealdidier.io;
 
 import java.io.Closeable;
 
-public class CloseableResult<T,R extends Closeable> implements Function<T,R> {
+public class CloseableResult<T,R extends Closeable> implements IOFunction<T,R> {
 
-    private final Function<T,R> inner;
+    private final IOFunction<T,R> inner;
 
-    public CloseableResult(Function<T, R> inner) {
+    public CloseableResult(IOFunction<T, R> inner) {
         if (inner == null) {
             throw new IllegalArgumentException("inner");
         }
@@ -14,7 +14,7 @@ public class CloseableResult<T,R extends Closeable> implements Function<T,R> {
     }
 
     @Override
-    public <V> Function<T, V> andThen(Function<? super R, ? extends V> after) {
+    public <V> IOFunction<T, V> andThen(IOFunction<? super R, ? extends V> after) {
         return t -> {
             try(R r = inner.apply(t)) {
                 return after.apply(r);
@@ -23,7 +23,7 @@ public class CloseableResult<T,R extends Closeable> implements Function<T,R> {
     }
 
     @Override
-    public final <V> Function<V, R> compose(Function<? super V, ? extends T> before) {
+    public final <V> IOFunction<V, R> compose(IOFunction<? super V, ? extends T> before) {
         return new CloseableResult<>(v -> inner.apply(before.apply(v)));
     }
 

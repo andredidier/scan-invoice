@@ -6,7 +6,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import java.io.IOException;
 
-public class SourceToTransformer implements Function<Source, Transformer> {
+public class SourceToTransformer implements IOFunction<Source, Transformer> {
     @Override
     public Transformer apply(Source source) throws IOException {
         try {

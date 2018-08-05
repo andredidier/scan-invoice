@@ -7,9 +7,8 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class XmlSourceToContents implements Function<Source, String> {
+public class XmlSourceToContents implements IOBiFunction<Source, Charset, String> {
     private final Transformer transformer;
-    private final Charset charset;
 
     public XmlSourceToContents(Transformer transformer, Charset charset) {
         if (transformer == null) {
@@ -26,7 +25,7 @@ public class XmlSourceToContents implements Function<Source, String> {
     }
 
     @Override
-    public String apply(Source source) throws IOException {
+    public String apply(Source source, Charset charset) throws IOException {
         try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             transformer.transform(source, new StreamResult(baos));
             return new String(baos.toByteArray(), charset);

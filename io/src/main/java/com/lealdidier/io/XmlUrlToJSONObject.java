@@ -11,9 +11,9 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class XmlUrlToJSONObject implements Function<URL, JSONObject> {
-    private final Function<Source, String> sourceToContents;
-    public XmlUrlToJSONObject(Function<Source, String> sourceToContents) {
+public class XmlUrlToJSONObject implements IOFunction<URL, JSONObject> {
+    private final IOFunction<Source, String> sourceToContents;
+    public XmlUrlToJSONObject(IOFunction<Source, String> sourceToContents) {
         this.sourceToContents = sourceToContents;
     }
 
@@ -26,10 +26,10 @@ public class XmlUrlToJSONObject implements Function<URL, JSONObject> {
 
     @Override
     public JSONObject apply(URL url) throws IOException {
-        Function<URL, InputStream> urlToIs = new CloseableResult<>(URL::openStream);
-        Function<InputStream, Source> isToSource = StreamSource::new;
+        IOFunction<URL, InputStream> urlToIs = new CloseableResult<>(URL::openStream);
+        IOFunction<InputStream, Source> isToSource = StreamSource::new;
 
-        Function<InputStream, JSONObject> isToJson =
+        IOFunction<InputStream, JSONObject> isToJson =
                 isToSource.andThen(sourceToContents.andThen(JSONObject::new));
 
         return urlToIs.andThen(isToJson).apply(url);

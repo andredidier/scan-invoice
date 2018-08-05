@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Scanner;
 
-public class InputStreamToContents implements Function<InputStream, String> {
+public class InputStreamToContents implements IOFunction<InputStream, String> {
     private final Charset charset;
 
     public InputStreamToContents(Charset charset) {
