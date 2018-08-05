@@ -2,42 +2,38 @@ package com.lealdidier.invoice.scan;
 
 import com.lealdidier.io.Input;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
+import spark.Response;
 
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.logging.Logger;
 
 public class XmlInvoice implements Invoice {
 
     private final static Logger logger = Logger.getLogger(XmlInvoice.class.getName());
 
-    private final Input<Source> xmlInput;
-    private final Input<Transformer> xsltInput;
+    private final Input<Document> xmlInput;
+    private final Input<Document> xslInput;
 
-    public XmlInvoice(Input<Source> xmlInput, Input<Transformer> xsltInput) {
+    public XmlInvoice(Input<Document> xmlInput, Input<Document> xslInput) {
         this.xmlInput = xmlInput;
-        this.xsltInput = xsltInput;
+        this.xslInput = xslInput;
     }
 
     @Override
-    public JSONObject toJson() throws IOException {
-        return toJson(xsltInput.read(), xmlInput.read());
-    }
-
-    private JSONObject toJson(Transformer transformer, Source source) throws IOException {
-        try (StringWriter sw = new StringWriter()) {
-            StreamResult result = new StreamResult(sw);
-            logger.fine(() -> "Transforming XML input to JSON using XSLT");
-            transformer.transform(source, result);
-            logger.fine(() -> "Returning json object");
-            return new JSONObject(sw.getBuffer().toString());
+    public void respondWithJsonBody(Response response) throws IOException {
+        try(ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            Transformer t = TransformerFactory.newDefaultInstance().newTransformer(new DOMSource(xslInput.read()));
+            t.transform(new DOMSource(xmlInput.read()), new StreamResult(baos));
+            response.body(new JSONObject(new String(baos.toByteArray())).toString());
         } catch (TransformerException e) {
             throw new IOException(e);
         }
     }
-
 }

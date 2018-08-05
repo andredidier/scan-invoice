@@ -10,6 +10,11 @@ public class ResourceUrlInput implements UrlInput {
     private final String name;
     private final Class<?> classForResource;
 
+    @Override
+    public String toString() {
+        return String.format("%s[resource=%s, class=%s]", getClass().getSimpleName(), name, classForResource.getName());
+    }
+
     public ResourceUrlInput(String name, Class<?> classForResource) {
         this.name = name;
         this.classForResource = classForResource;

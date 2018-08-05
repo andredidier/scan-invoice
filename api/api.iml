@@ -45,6 +45,10 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.glassfish.hk2.external:javax.inject:2.5.0-b42" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.glassfish.jersey.connectors:jersey-jetty-connector:2.26" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-client:9.4.3.v20170317" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:2.21.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy:1.8.15" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: net.bytebuddy:byte-buddy-agent:1.8.15" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.objenesis:objenesis:2.6" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.glassfish.jersey.inject:jersey-hk2:2.26" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.glassfish.hk2:hk2-locator:2.5.0-b42" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.glassfish.hk2.external:aopalliance-repackaged:2.5.0-b42" level="project" />

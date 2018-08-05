@@ -58,7 +58,7 @@ public class ScanInvoiceApi {
             path("/regularexpression", () -> {
                 before("/:id", (req, res) -> logger.info("Calling for existing regular expression"));
                 delete("/:id", DelRegularExpression::del);
-                put("/:id", PutRegularExpression::put);
+                with("/:id", PutRegularExpression::with);
                 get("/:id", GetRegularExpression::get);
             });
         });

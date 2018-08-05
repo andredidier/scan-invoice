@@ -1,21 +1,29 @@
 package com.lealdidier.invoice.scan;
 
-import com.lealdidier.io.*;
+import com.lealdidier.functions.InputStreamToContentsString;
+import com.lealdidier.functions.ResourceNameToUrl;
+import com.lealdidier.functions.UrlToInputStream;
+import com.lealdidier.io.DocumentInput;
+import com.lealdidier.io.Input;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.w3c.dom.Document;
+import spark.Response;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.stream.StreamSource;
-import java.io.IOException;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 @DisplayName("XML Invoice Test")
 public class XmlInvoiceTest {
@@ -23,16 +31,16 @@ public class XmlInvoiceTest {
     @DisplayName("Test converstion using XSLT")
     @ParameterizedTest(name = "[{index}]. {0} => {1}")
     @CsvSource({ "/invoice1.xml, /json1.js" })
-    public void testSimple(String xmlFile, String jsonFile) throws IOException, URISyntaxException {
-        try(InputStream fis = getClass().getResourceAsStream(xmlFile)) {
-            Input<Source> s = new ScalarInput<>(new StreamSource(fis));
-            Input<Transformer> t = new SourceTransformerInput(new UrlSourceInput(new ResourceUrlInput("/nfce-pe-to-json.xsl", getClass())));
-            XmlInvoice xmlInvoice = new XmlInvoice(s, t);
+    public void testSimple(String xmlFile, String jsonFile) throws Exception {
 
-            JSONObject expected = new JSONObject(
-                    new UrlStringInput(new ResourceUrlInput(jsonFile, getClass()), "UTF-8").read()
-            );
-            assertEquals(expected.toString(), xmlInvoice.toJson().toString());
-        }
+        XmlInvoice xmlInvoice = new XmlInvoice(
+                new DocumentInput(new File(xmlFile).toURL()),
+                new DocumentInput(getClass().getResource("/nfce-pe-to-json.xsl")));
+
+        Response response = mock(Response.class);
+
+        xmlInvoice.respondWithJsonBody(response);
+
+        verify(response).body(new JSONObject().toString());
     }
 }

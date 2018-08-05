@@ -1,5 +1,5 @@
 package com.lealdidier.io;
 
 public interface Media {
-    Media put(Object value);
+    <T> Media with(String name, T value);
 }

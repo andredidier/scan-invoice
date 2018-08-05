@@ -18,6 +18,7 @@ public class ScanInvoiceV1 {
 
     public void methods() {
         before("/*", (req, res) -> logger.info("Calling API v1"));
+        /*
         post("/interpret", (req, res)-> {
             String contents = new XmlInvoice(
                     new UrlSourceInput(new URL(req.body())),
@@ -26,5 +27,6 @@ public class ScanInvoiceV1 {
             res.status(200);
             return contents;
         });
+        */
     }
 }
