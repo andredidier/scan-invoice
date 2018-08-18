@@ -1,4 +1,6 @@
-package com.lealdidier.io;
+package com.lealdidier.io.functions;
+
+import com.lealdidier.io.IOBiFunction;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;

@@ -1,5 +1,6 @@
 package com.lealdidier.io;
 
+import com.lealdidier.io.functions.ResourceToContents;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -9,10 +10,10 @@ import org.mockito.InOrder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -69,22 +70,16 @@ public class CloseableTest {
     @ParameterizedTest(name = "[{index}]. {0} => {1}")
     @CsvSource({ "file1.txt, Contents #1", "file2.txt, Contents #2" })
     public void testReadingContents(String fileName, String contents) throws IOException {
-        IOFunction<String, URL> f1 = name -> getClass().getResource(name);
-        IOFunction<URL, InputStream> f2 = new CloseableResult<>(URL::openStream);
-        IOFunction<InputStream, String> f3 = new InputStreamToContents(StandardCharsets.UTF_8);
-
-        assertEquals(contents, f1.andThen(f2.andThen(f3)).apply(fileName));
+        assertEquals(contents, new ResourceToContents().apply(fileName, StandardCharsets.UTF_8));
     }
 
     @DisplayName("Wrong order of andThen")
     @ParameterizedTest(name = "[{index}]. {0}")
     @CsvSource({ "file1.txt", "file2.txt" })
     public void testWrongOrderAndThen(String fileName) {
-        IOFunction<String, URL> f1 = name -> getClass().getResource(name);
-        IOFunction<URL, InputStream> f2 = new CloseableResult<>(URL::openStream);
-        IOFunction<InputStream, String> f3 = new InputStreamToContents(StandardCharsets.UTF_8);
 
-        RuntimeException ioe = assertThrows(RuntimeException.class, () -> f1.andThen(f2).andThen(f3).apply(fileName));
+        RuntimeException ioe = assertThrows(RuntimeException.class, () ->
+                new ResourceToContents().apply(fileName, StandardCharsets.UTF_8));
         assertEquals("Cannot use a Closeable outside its try block.", ioe.getMessage());
     }
 

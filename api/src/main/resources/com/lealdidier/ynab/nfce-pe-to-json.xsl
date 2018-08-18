@@ -13,6 +13,7 @@
     "payee": "<xsl:value-of select="emit/xFant"/>",
     "amount": "<xsl:value-of select="total/ICMSTot/vNF"/>",
     "date": "<xsl:value-of select="ide/dhEmi"/>",
+    "import_id": "<xsl:value-of select="@Id"/>",
     "items":
     [
         <xsl:apply-templates select="det/prod"/>
