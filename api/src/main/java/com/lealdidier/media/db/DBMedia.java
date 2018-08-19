@@ -7,7 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collections;
-import java.util.function.BiConsumer;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -16,17 +17,20 @@ public class DBMedia implements Media<PreparedStatement> {
     private final String tableName;
     private final Supplier<Connection> connectionSupplier;
     private final DBMapping[] mappings;
+    private final Set<Consumer<PreparedStatement>> consumers;
 
-    public DBMedia(String tableName, Supplier<Connection> connectionSupplier,
-                   DBMapping... mappings) {
+    private DBMedia(String tableName, Supplier<Connection> connectionSupplier,
+                    Set<Consumer<PreparedStatement>> consumers,
+                    DBMapping... mappings) {
         this.tableName = tableName;
         this.connectionSupplier = connectionSupplier;
+        this.consumers = Collections.unmodifiableSet(consumers);
         this.mappings = mappings;
     }
 
-    @Override
-    public void write(Object o) throws IOException {
-        throw new IOException("Not supported");
+    public DBMedia(String tableName, Supplier<Connection> connectionSupplier,
+                   DBMapping... mappings) {
+        this(tableName, connectionSupplier, new HashSet<>(), mappings);
     }
 
     private PreparedStatement prepare(Connection c) throws SQLException {
@@ -35,9 +39,7 @@ public class DBMedia implements Media<PreparedStatement> {
                         String.join(",", Collections.nCopies(mappings.length, "?"))));
     }
 
-    @Override
-    @SafeVarargs
-    public final void writeFields(Consumer<PreparedStatement>... consumers) throws IOException {
+    private void writeFields(Set<Consumer<PreparedStatement>> consumers) throws IOException {
         try(Connection c = connectionSupplier.get();
             PreparedStatement s = prepare(c)) {
             for(Consumer<PreparedStatement> consumer : consumers) {
@@ -60,8 +62,7 @@ public class DBMedia implements Media<PreparedStatement> {
         return null;
     }
 
-    @Override
-    public <V> Consumer<PreparedStatement> create(String name, Supplier<V> value) {
+    private <V> Consumer<PreparedStatement> create(String name, Supplier<V> value) {
         DBPreparedStatementConsumer<V> c = find(name);
 
         if (c == null) {
@@ -75,6 +76,18 @@ public class DBMedia implements Media<PreparedStatement> {
                 throw new RuntimeException(e);
             }
         };
+    }
+
+    @Override
+    public <V> Media<PreparedStatement> addField(String name, Supplier<V> value) {
+        Set<Consumer<PreparedStatement>> consumers = new HashSet<>(this.consumers);
+        consumers.add(create(name, value));
+        return new DBMedia(tableName, connectionSupplier, consumers, mappings);
+    }
+
+    @Override
+    public void writeFields() throws IOException {
+        writeFields(consumers);
     }
 
 }

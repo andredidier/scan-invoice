@@ -13,10 +13,10 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("XML Transaction")
 public class XmlTransactionTest {
-
 
     @DisplayName("Parsing and output to Map Media")
     @Test
@@ -33,12 +33,15 @@ public class XmlTransactionTest {
         Function<URL, JSONObject> jsonUrlToJson = contentsToJson.compose(getContents);
 
         Transaction t = new UrlXmlInvoiceTransaction(resource.apply("/invoice1.xml"));
+        Map<String, Object> result = new HashMap<>();
         Map<String, String> m = new HashMap<>();
         m.put("ynabJson", "json");
-        MapMedia mapMedia = new MapMedia(m);
+        MapMedia mapMedia = new MapMedia(result, m);
         t.saveTo(mapMedia);
 
+        assertEquals(1, result.size());
+        assertTrue(result.keySet().contains("json"));
         assertEquals(jsonUrlToJson.compose(resource).apply("/json1.js").toString(),
-                mapMedia.map().get("json").toString());
+                result.get("json").toString());
     }
 }

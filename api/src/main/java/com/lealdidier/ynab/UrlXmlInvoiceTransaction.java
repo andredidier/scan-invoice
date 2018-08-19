@@ -1,6 +1,5 @@
 package com.lealdidier.ynab;
 
-import com.amazonaws.util.IOUtils;
 import com.lealdidier.io.XmlUrlInputStreamSupplier;
 import com.lealdidier.media.Media;
 import com.lealdidier.ynab.nfce.NfceXmlToJson;
@@ -10,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.function.Supplier;
+import org.apache.commons.io.IOUtils;
 
 public class UrlXmlInvoiceTransaction implements Transaction {
     private final URL url;
@@ -39,9 +39,9 @@ public class UrlXmlInvoiceTransaction implements Transaction {
 
     @Override
     public <T> void saveTo(Media<T> media) throws IOException {
-        media.writeFields(
-                media.create("url", () -> url),
-                media.create("xml", () -> xmlContents()),
-                media.create("ynabJson", () -> ynabJsonContents()));
+        media.addField("url", () -> url)
+                .addField("xml", this::xmlContents)
+                .addField("ynabJson", this::ynabJsonContents)
+                .writeFields();
     }
 }
