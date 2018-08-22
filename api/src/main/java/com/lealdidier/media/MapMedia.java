@@ -1,6 +1,7 @@
 package com.lealdidier.media;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -41,6 +42,11 @@ public class MapMedia implements Media<Map<String, Object>> {
         Set<Consumer<Map<String, Object>>> newConsumers = new HashSet<>(consumers);
         newConsumers.add(create(name, value));
         return new MapMedia(map, mapping, newConsumers);
+    }
+
+    //@Override
+    public <V> Media<Map<String, Object>> addMapping(String name, BiConsumer<Map<String, Object>, V> consumeValue) {
+        return null;
     }
 
     @Override

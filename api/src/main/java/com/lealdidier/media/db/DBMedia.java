@@ -14,34 +14,31 @@ import java.util.function.Supplier;
 
 public class DBMedia implements Media<PreparedStatement> {
 
-    private final String tableName;
-    private final Supplier<Connection> connectionSupplier;
+    private final String sql;
+    private final Connection connection;
     private final DBMapping[] mappings;
     private final Set<Consumer<PreparedStatement>> consumers;
 
-    private DBMedia(String tableName, Supplier<Connection> connectionSupplier,
+    private DBMedia(String sql, Connection connection,
                     Set<Consumer<PreparedStatement>> consumers,
                     DBMapping... mappings) {
-        this.tableName = tableName;
-        this.connectionSupplier = connectionSupplier;
+        this.sql = sql;
+        this.connection = connection;
         this.consumers = Collections.unmodifiableSet(consumers);
         this.mappings = mappings;
     }
 
-    public DBMedia(String tableName, Supplier<Connection> connectionSupplier,
+    public DBMedia(String sql, Connection connection,
                    DBMapping... mappings) {
-        this(tableName, connectionSupplier, new HashSet<>(), mappings);
+        this(sql, connection, new HashSet<>(), mappings);
     }
 
     private PreparedStatement prepare(Connection c) throws SQLException {
-        return c.prepareStatement(
-                String.format("INSERT INTO %s VALUES (%s)", tableName,
-                        String.join(",", Collections.nCopies(mappings.length, "?"))));
+        return c.prepareStatement(sql);
     }
 
     private void writeFields(Set<Consumer<PreparedStatement>> consumers) throws IOException {
-        try(Connection c = connectionSupplier.get();
-            PreparedStatement s = prepare(c)) {
+        try(PreparedStatement s = prepare(connection)) {
             for(Consumer<PreparedStatement> consumer : consumers) {
                 consumer.accept(s);
             }
@@ -82,7 +79,7 @@ public class DBMedia implements Media<PreparedStatement> {
     public <V> Media<PreparedStatement> addField(String name, Supplier<V> value) {
         Set<Consumer<PreparedStatement>> consumers = new HashSet<>(this.consumers);
         consumers.add(create(name, value));
-        return new DBMedia(tableName, connectionSupplier, consumers, mappings);
+        return new DBMedia(sql, connection, consumers, mappings);
     }
 
     @Override
