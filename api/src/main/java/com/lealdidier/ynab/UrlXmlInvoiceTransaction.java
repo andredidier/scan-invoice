@@ -43,18 +43,11 @@ public class UrlXmlInvoiceTransaction implements Transaction {
         return jsonObject;
     }
 
-    private String contentsHash() {
-        return new AsciiHash().apply(ynabJsonContents().toString());
-    }
-
     @Override
-    public <T> void saveTo(Media<T> media) throws IOException {
-        media.addField("url", () -> url)
+    public <E extends Exception> Media<E> addTo(Media<E> media) {
+        return media.addField("url", () -> url)
                 .addField("xml", this::xmlContents)
-                .addField("ynabJson", this::ynabJsonContents)
-                .addField("urlHash", () -> urlHash)
-                .addField("ynabJsonHash", this::contentsHash)
-                .writeFields();
+                .addField("ynabJson", this::ynabJsonContents);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.lealdidier.ynab;
 
-import com.lealdidier.media.MapMedia;
+import com.lealdidier.media.Media;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ public class XmlTransactionTest {
 
     @DisplayName("Parsing and output to Map Media")
     @Test
-    public void verifyJSONMedia() throws IOException {
+    public void verifyJSONMedia() {
         Function<String, URL> resource = getClass()::getResource;
         Function<URL, String> getContents = url -> {
             try {
@@ -34,10 +34,9 @@ public class XmlTransactionTest {
 
         Transaction t = new UrlXmlInvoiceTransaction(resource.apply("/invoice1.xml"));
         Map<String, Object> result = new HashMap<>();
-        Map<String, String> m = new HashMap<>();
-        m.put("ynabJson", "json");
-        MapMedia mapMedia = new MapMedia(result, m);
-        t.saveTo(mapMedia);
+
+        t.addTo(new Media<RuntimeException>()
+                .addMapping("ynabJson", v -> result.put("json", v))).writeFields();
 
         assertEquals(1, result.size());
         assertTrue(result.keySet().contains("json"));
