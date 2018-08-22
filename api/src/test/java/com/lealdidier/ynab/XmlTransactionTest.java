@@ -36,7 +36,7 @@ public class XmlTransactionTest {
         Map<String, Object> result = new HashMap<>();
 
         t.addTo(new Media<RuntimeException>()
-                .addMapping("ynabJson", v -> result.put("json", v))).writeFields();
+                .addMapping(TransactionField.JSON, v -> result.put("json", v))).writeFields();
 
         assertEquals(1, result.size());
         assertTrue(result.keySet().contains("json"));

@@ -1,6 +1,5 @@
 package com.lealdidier.ynab;
 
-import com.lealdidier.io.AsciiHash;
 import com.lealdidier.io.XmlUrlInputStreamSupplier;
 import com.lealdidier.media.Media;
 import com.lealdidier.ynab.nfce.NfceXmlToJson;
@@ -12,15 +11,15 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.function.Supplier;
 
+import static com.lealdidier.ynab.TransactionField.*;
+
 public class UrlXmlInvoiceTransaction implements Transaction {
     private final URL url;
     private final Supplier<InputStream> xslStreamSupplier;
-    private final String urlHash;
     private transient JSONObject jsonObject;
 
-    public UrlXmlInvoiceTransaction(URL url, Supplier<InputStream> xslStreamSupplier) {
+    private UrlXmlInvoiceTransaction(URL url, Supplier<InputStream> xslStreamSupplier) {
         this.url = url;
-        this.urlHash = new AsciiHash().apply(url.toString());
         this.xslStreamSupplier = xslStreamSupplier;
     }
 
@@ -45,9 +44,9 @@ public class UrlXmlInvoiceTransaction implements Transaction {
 
     @Override
     public <E extends Exception> Media<E> addTo(Media<E> media) {
-        return media.addField("url", () -> url)
-                .addField("xml", this::xmlContents)
-                .addField("ynabJson", this::ynabJsonContents);
+        return media.addField(URL, () -> url)
+                .addField(XML, this::xmlContents)
+                .addField(JSON, this::ynabJsonContents);
     }
 
 }

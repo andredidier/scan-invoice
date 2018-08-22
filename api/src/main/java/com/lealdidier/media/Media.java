@@ -8,10 +8,10 @@ import java.util.function.Supplier;
 
 public class Media<E extends Exception> {
 
-    private final Map<String, Supplier<Object>> fields;
-    private final Map<String, List<ExceptionConsumer<E, Object>>> consumers;
+    private final Map<FieldName, Supplier<Object>> fields;
+    private final Map<FieldName, List<ExceptionConsumer<E, Object>>> consumers;
 
-    public Media(Map<String, Supplier<Object>> fields, Map<String, List<ExceptionConsumer<E, Object>>> consumers) {
+    Media(Map<FieldName, Supplier<Object>> fields, Map<FieldName, List<ExceptionConsumer<E, Object>>> consumers) {
         this.fields = fields;
         this.consumers = consumers;
     }
@@ -20,14 +20,14 @@ public class Media<E extends Exception> {
     }
 
 
-    public Media<E> addField(String name, Supplier<Object> value) {
-        Map<String, Supplier<Object>> newFields = new HashMap<>(fields);
+    public Media<E> addField(FieldName name, Supplier<Object> value) {
+        Map<FieldName, Supplier<Object>> newFields = new HashMap<>(fields);
         newFields.put(name, value);
         return new Media(newFields, consumers);
     }
 
-    public Media<E> addMapping(String name, ExceptionConsumer<E, ?> consumeValue) {
-        Map<String, List<ExceptionConsumer<E, Object>>> newConsumers = new HashMap<>(consumers);
+    public Media<E> addMapping(FieldName name, ExceptionConsumer<E, ?> consumeValue) {
+        Map<FieldName, List<ExceptionConsumer<E, Object>>> newConsumers = new HashMap<>(consumers);
         List<ExceptionConsumer<E, Object>> newConsumersList;
         if (newConsumers.containsKey(name)) {
             newConsumersList = new LinkedList<>(newConsumers.get(name));
@@ -40,7 +40,7 @@ public class Media<E extends Exception> {
     }
 
     public void writeFields() throws E {
-        for(String name : consumers.keySet()) {
+        for(FieldName name : consumers.keySet()) {
             if (!fields.containsKey(name)) {
                 continue;
             }

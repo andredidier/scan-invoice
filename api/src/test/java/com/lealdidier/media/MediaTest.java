@@ -4,6 +4,7 @@ import com.lealdidier.io.AsciiHash;
 import com.lealdidier.media.ExceptionConsumer;
 import com.lealdidier.media.Media;
 import com.lealdidier.ynab.Transaction;
+import com.lealdidier.ynab.TransactionField;
 import com.lealdidier.ynab.UrlXmlInvoiceTransaction;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
@@ -27,15 +28,23 @@ import static org.mockito.Mockito.*;
 @DisplayName("DB Media")
 public class MediaTest {
 
+    enum TestField implements FieldName{
+        f1, f2
+    }
+
+    enum AuditField implements FieldName {
+        UpdateDate
+    }
+
     @DisplayName("Invoke field value only on those mapped")
     @Test
     void invokeOnlyThoseOnMapping() {
         Map<String, Object> values = new HashMap<>();
         Function<String, String> s = mock(Function.class);
         new Media<RuntimeException>()
-                .addMapping("f1", v -> values.put("v1", v))
-                .addField("f1", () -> s.apply("v1"))
-                .addField("f2", () -> s.apply("v2"))
+                .addMapping(TestField.f1, v -> values.put("v1", v))
+                .addField(TestField.f1, () -> s.apply("v1"))
+                .addField(TestField.f2, () -> s.apply("v2"))
                 .writeFields();
         verify(s, times(1)).apply("v1");
         verify(s, times(0)).apply("v2");
@@ -48,8 +57,8 @@ public class MediaTest {
         when(ps.execute()).thenReturn(true);
 
         new Media<SQLException>()
-                .addMapping("url", o -> ps.setString(1, o.toString()))
-                .addField("url",() -> {
+                .addMapping(TransactionField.URL, o -> ps.setString(1, o.toString()))
+                .addField(TransactionField.URL,() -> {
                     try {
                         return new URL("http://localhost");
                     } catch (MalformedURLException e) {
@@ -87,12 +96,12 @@ public class MediaTest {
         Date d = new Date();
 
         t.addTo(new Media<SQLException>()
-                .addField("updated", () -> d)
-                .addMapping("url", toString.apply(1))
-                .addMapping("xml", string.apply(2))
-                .addMapping("ynabJson", toString.apply(3))
-                .addMapping("updated", date.apply(4))
-                .addMapping("ynabJson", j -> string.apply(5).accept(new AsciiHash().apply(j.toString()))))
+                .addField(AuditField.UpdateDate, () -> d)
+                .addMapping(TransactionField.URL, toString.apply(1))
+                .addMapping(TransactionField.XML, string.apply(2))
+                .addMapping(TransactionField.JSON, toString.apply(3))
+                .addMapping(AuditField.UpdateDate, date.apply(4))
+                .addMapping(TransactionField.JSON, j -> string.apply(5).accept(new AsciiHash().apply(j.toString()))))
                 .writeFields();
 
         JSONObject json = jsonResourceFileNameToJson.apply("/json1.js");
@@ -127,8 +136,8 @@ public class MediaTest {
         Function<Integer, ExceptionConsumer<SQLException, String>> calculateHash = i -> s -> ps.setString(i, new AsciiHash().apply(s));
 
         t.addTo(new Media<SQLException>()
-                .addMapping("url", u -> calculateHash.apply(1).accept(u.toString()))
-                .addMapping("ynabJson", j -> calculateHash.apply(2).accept(j.toString())))
+                .addMapping(TransactionField.URL, u -> calculateHash.apply(1).accept(u.toString()))
+                .addMapping(TransactionField.JSON, j -> calculateHash.apply(2).accept(j.toString())))
                 .writeFields();
 
         JSONObject json = jsonResourceFileNameToJson.apply("/json1.js");
