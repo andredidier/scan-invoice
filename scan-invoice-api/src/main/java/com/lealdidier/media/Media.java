@@ -11,7 +11,7 @@ public class Media<E extends Exception> {
     private final Map<FieldName, Supplier<Object>> fields;
     private final Map<FieldName, List<ExceptionConsumer<E, Object>>> consumers;
 
-    Media(Map<FieldName, Supplier<Object>> fields, Map<FieldName, List<ExceptionConsumer<E, Object>>> consumers) {
+    private Media(Map<FieldName, Supplier<Object>> fields, Map<FieldName, List<ExceptionConsumer<E, Object>>> consumers) {
         this.fields = fields;
         this.consumers = consumers;
     }
@@ -23,7 +23,7 @@ public class Media<E extends Exception> {
     public Media<E> addField(FieldName name, Supplier<Object> value) {
         Map<FieldName, Supplier<Object>> newFields = new HashMap<>(fields);
         newFields.put(name, value);
-        return new Media(newFields, consumers);
+        return new Media<>(newFields, consumers);
     }
 
     public Media<E> addMapping(FieldName name, ExceptionConsumer<E, ?> consumeValue) {
@@ -36,7 +36,7 @@ public class Media<E extends Exception> {
         }
         newConsumers.put(name, newConsumersList);
         newConsumersList.add((ExceptionConsumer<E, Object>) consumeValue);
-        return new Media(fields, newConsumers);
+        return new Media<>(fields, newConsumers);
     }
 
     public void writeFields() throws E {

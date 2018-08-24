@@ -9,7 +9,7 @@
         <artifactId>scan-invoice</artifactId>
         <version>${revision}</version>
     </parent>
-    <artifactId>api</artifactId>
+    <artifactId>scan-invoice-api</artifactId>
     <name>API</name>
     <version>${revision}</version>
     <packaging>jar</packaging>

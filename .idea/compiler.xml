@@ -7,12 +7,19 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api" />
+        <module name="scan-invoice-api" />
+        <module name="scan-invoice-static" />
+        <module name="static" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="api" target="9" />
       <module name="file" target="9" />
       <module name="io" target="9" />
+      <module name="scan-invoice" target="9" />
+      <module name="scan-invoice-api" target="9" />
+      <module name="scan-invoice-static" target="9" />
+      <module name="static" target="9" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -19,7 +19,8 @@
     </properties>
 
     <modules>
-        <module>api</module>
+        <module>scan-invoice-api</module>
+        <module>scan-invoice-static</module>
     </modules>
 
     <dependencies>
