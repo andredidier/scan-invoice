@@ -11,8 +11,9 @@
     </parent>
     <groupId>com.andredidier</groupId>
     <artifactId>scan-invoice-static</artifactId>
-    <version>${revision}</version>
     <name>Static</name>
+    <version>${revision}</version>
+    <packaging>war</packaging>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.webjars/bootstrap -->
