@@ -1,11 +1,13 @@
 package com.lealdidier.api;
 
+import com.lealdidier.io.AsciiHash;
 import com.lealdidier.media.Media;
 import com.lealdidier.sql.*;
 import com.lealdidier.ynab.ResultSetTransaction;
 import com.lealdidier.ynab.Transaction;
 import com.lealdidier.ynab.TransactionField;
 import com.lealdidier.ynab.UrlXmlInvoiceTransaction;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import spark.Request;
@@ -36,25 +38,30 @@ public class UrlPollApi implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
         URL url = createUrl(request.queryParams(urlFormFieldName));
-        process(url, response);
+        process(url, request, response);
         return null;
     }
 
-    private void process(URL url, Response response) throws DBException {
+    private void process(URL url, Request request, Response response) throws DBException {
         try(Connection conn = credentials.openConnection();
             PreparedStatement ps = conn.prepareStatement(TransactionDBStatement.QueryJson.sql())) {
             ps.setString(1, url.toString());
-            processQuery(url, conn, ps, response);
+            processQuery(url, conn, ps, request, response);
         } catch (SQLException e) {
             throw new DBException(e);
         }
     }
 
-    private void processQuery(URL url, Connection conn, PreparedStatement ps, Response response) throws DBException {
+    private void processQuery(URL url, Connection conn, PreparedStatement ps, Request request, Response response) throws DBException {
         try(ResultSet rs = ps.executeQuery()) {
             Transaction t;
             if (rs.next()) {
                 t = new ResultSetTransaction(rs, "URL", "XML", "JSON");
+                if (rs.getBoolean("PROCESSED")) {
+                    //TODO falta implementar
+                } else {
+                    handleNotProcessedHeader(url, request, response);
+                }
             } else {
                 t = new UrlXmlInvoiceTransaction(url);
                 saveRequest(t, conn, response);
@@ -68,6 +75,17 @@ public class UrlPollApi implements Route {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void handleNotProcessedHeader(URL url, Request request, Response response) {
+        String urlHash = new AsciiHash().apply(url.toString());
+        if (request.headers(HttpHeaders.IF_NONE_MATCH).equals(urlHash)) {
+            response.status(HttpStatus.SC_NOT_MODIFIED);
+        } else {
+            response.status(HttpStatus.SC_ACCEPTED);
+        }
+        response.header(HttpHeaders.CACHE_CONTROL, String.format("public,max-age=%s", shortCache.toSeconds()));
+        response.header(HttpHeaders.ETAG, urlHash);
     }
 
     private void saveRequest(Transaction t, Connection conn, Response response) throws DBException {
