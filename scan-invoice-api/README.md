@@ -25,7 +25,7 @@ API->API: turl=InvoiceURLTransaction
 API->+DB: tdb=query turl
 DB-->-API: exists(turl)
 alt exists(turl)
-    API->API: t=tdb, etag=contents hash, cache=24 h
+    API->API: status: not modified
 else not exists(turl)
     API->+Queue: queue turl
     Queue-->-API: queued

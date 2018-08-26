@@ -32,10 +32,10 @@ public class XmlTransactionTest {
         Function<String, JSONObject> contentsToJson = JSONObject::new;
         Function<URL, JSONObject> jsonUrlToJson = contentsToJson.compose(getContents);
 
-        Transaction t = new UrlXmlInvoiceTransaction(resource.apply("/invoice1.xml"));
+        Transaction transaction = new UrlXmlInvoiceTransaction(resource.apply("/invoice1.xml"));
         Map<String, Object> result = new HashMap<>();
 
-        t.addTo(new Media<RuntimeException>()
+        transaction.addTo(new Media<RuntimeException>()
                 .addMapping(TransactionField.JSON, v -> result.put("json", v))).writeFields();
 
         assertEquals(1, result.size());

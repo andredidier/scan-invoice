@@ -1,9 +1,9 @@
 package com.lealdidier.ynab;
 
 import com.lealdidier.media.Media;
+import com.lealdidier.media.MediaFieldConfiguration;
 
 import java.io.IOException;
 
-public interface Transaction {
-    <E extends Exception> Media<E> addTo(Media<E> media);
+public interface Transaction extends MediaFieldConfiguration {
 }
