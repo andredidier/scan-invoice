@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="xsl/an/NFCe.xsl"?>
+<nfeProc xmlns="http://www.portalfiscal.inf.br/nfe">
+    <proc schema="procNFe_v3.10.xsd" NSU="362820014" endIP="179.180.157.134">
+        <nfeProc xmlns="http://www.portalfiscal.inf.br/nfe" versao="3.10">
+            <NFe xmlns="http://www.portalfiscal.inf.br/nfe">
+                <infNFe versao="3.10" Id="NFe26180707429484000138650010000279221001498151">
+                    <ide>
+                        <cUF>26</cUF>
+                        <cNF>00149815</cNF>
+                        <natOp>VENDA A CONSUMIDOR FINAL</natOp>
+                        <indPag>0</indPag>
+                        <mod>65</mod>
+                        <serie>1</serie>
+                        <nNF>27922</nNF>
+                        <dhEmi>2018-07-18T10:26:07-03:00</dhEmi>
+                        <tpNF>1</tpNF>
+                        <idDest>1</idDest>
+                        <cMunFG>2611606</cMunFG>
+                        <tpImp>4</tpImp>
+                        <tpEmis>1</tpEmis>
+                        <cDV>1</cDV>
+                        <tpAmb>1</tpAmb>
+                        <finNFe>1</finNFe>
+                        <indFinal>1</indFinal>
+                        <indPres>1</indPres>
+                        <procEmi>0</procEmi>
+                        <verProc>18.02.2</verProc>
+                    </ide>
+                    <emit>
+                        <CNPJ>07429484000138</CNPJ>
+                        <xNome>ENGENHO CASA FORTE DELICATESSEN LTDA</xNome>
+                        <xFant>ENGENHO CASA FORTE</xFant>
+                        <enderEmit>
+                            <xLgr>AV 17 DE AGOSTO</xLgr>
+                            <nro>1548</nro>
+                            <xBairro>CASA FORTE</xBairro>
+                            <cMun>2611606</cMun>
+                            <xMun>RECIFE</xMun>
+                            <UF>PE</UF>
+                            <CEP>52061540</CEP>
+                            <cPais>1058</cPais>
+                            <xPais>BRASIL</xPais>
+                            <fone>8132697181</fone>
+                        </enderEmit>
+                        <IE>033193347</IE>
+                        <CRT>3</CRT>
+                    </emit>
+                    <det nItem="1">
+                        <prod>
+                            <cProd>0000000009864</cProd>
+                            <cEAN/>
+                            <xProd>SALGADOS</xProd>
+                            <NCM>19052090</NCM>
+                            <CEST>1705600</CEST>
+                            <CFOP>5405</CFOP>
+                            <uCom>UN</uCom>
+                            <qCom>1.0000</qCom>
+                            <vUnCom>7.1000000000</vUnCom>
+                            <vProd>7.10</vProd>
+                            <cEANTrib/>
+                            <uTrib>UN</uTrib>
+                            <qTrib>1.0000</qTrib>
+                            <vUnTrib>7.1000000000</vUnTrib>
+                            <indTot>1</indTot>
+                        </prod>
+                        <imposto>
+                            <ICMS>
+                                <ICMS60>
+                                    <orig>0</orig>
+                                    <CST>60</CST>
+                                </ICMS60>
+                            </ICMS>
+                        </imposto>
+                    </det>
+                    <det nItem="2">
+                        <prod>
+                            <cProd>0000000009836</cProd>
+                            <cEAN/>
+                            <xProd>SAND DE QJ DO REINO</xProd>
+                            <NCM>19052090</NCM>
+                            <CEST>1705100</CEST>
+                            <CFOP>5405</CFOP>
+                            <uCom>UN</uCom>
+                            <qCom>1.0000</qCom>
+                            <vUnCom>11.9000000000</vUnCom>
+                            <vProd>11.90</vProd>
+                            <cEANTrib/>
+                            <uTrib>UN</uTrib>
+                            <qTrib>1.0000</qTrib>
+                            <vUnTrib>11.9000000000</vUnTrib>
+                            <indTot>1</indTot>
+                        </prod>
+                        <imposto>
+                            <ICMS>
+                                <ICMS60>
+                                    <orig>0</orig>
+                                    <CST>60</CST>
+                                </ICMS60>
+                            </ICMS>
+                        </imposto>
+                    </det>
+                    <det nItem="3">
+                        <prod>
+                            <cProd>0000000009827</cProd>
+                            <cEAN/>
+                            <xProd>CAFE COM LEITE GRANDE</xProd>
+                            <NCM>21011110</NCM>
+                            <CEST>1710700</CEST>
+                            <CFOP>5405</CFOP>
+                            <uCom>UN</uCom>
+                            <qCom>1.0000</qCom>
+                            <vUnCom>5.5000000000</vUnCom>
+                            <vProd>5.50</vProd>
+                            <cEANTrib/>
+                            <uTrib>UN</uTrib>
+                            <qTrib>1.0000</qTrib>
+                            <vUnTrib>5.5000000000</vUnTrib>
+                            <indTot>1</indTot>
+                        </prod>
+                        <imposto>
+                            <ICMS>
+                                <ICMS60>
+                                    <orig>0</orig>
+                                    <CST>60</CST>
+                                </ICMS60>
+                            </ICMS>
+                        </imposto>
+                    </det>
+                    <total>
+                        <ICMSTot>
+                            <vBC>0.00</vBC>
+                            <vICMS>0.00</vICMS>
+                            <vICMSDeson>0.00</vICMSDeson>
+                            <vFCPUFDest>0.00</vFCPUFDest>
+                            <vBCST>0.00</vBCST>
+                            <vST>0.00</vST>
+                            <vProd>24.50</vProd>
+                            <vFrete>0.00</vFrete>
+                            <vSeg>0.00</vSeg>
+                            <vDesc>0.00</vDesc>
+                            <vII>0.00</vII>
+                            <vIPI>0.00</vIPI>
+                            <vPIS>0.00</vPIS>
+                            <vCOFINS>0.00</vCOFINS>
+                            <vOutro>0.00</vOutro>
+                            <vNF>24.50</vNF>
+                        </ICMSTot>
+                    </total>
+                    <transp>
+                        <modFrete>9</modFrete>
+                    </transp>
+                    <pag>
+                        <tPag>03</tPag>
+                        <vPag>24.50</vPag>
+                        <card>
+                            <tpIntegra>2</tpIntegra>
+                        </card>
+                    </pag>
+                    <infAdic>
+                        <infCpl>VAL APROX DOS TRIBUTOS R$ 5,79 (23,63%)</infCpl>
+                    </infAdic>
+                </infNFe>
+                <infNFeSupl>
+                    <qrCode>
+                        http://nfce.sefaz.pe.gov.br/nfce-web/consultarNFCe?chNFe=26180707429484000138650010000279221001498151&amp;nVersao=100&amp;tpAmb=1&amp;dhEmi=323031382D30372D31385431303A32363A30372D30333A3030&amp;vNF=24.50&amp;vICMS=0.00&amp;digVal=567A374F45556F6B6F6779655A5A6C58335A32524D5347467765673D&amp;cIdToken=000001&amp;cHashQRCode=53EB3634ACD9A481499787F1111EBCB6A894AA2E
+                    </qrCode>
+                </infNFeSupl>
+                <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+                    <SignedInfo>
+                        <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                        <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                        <Reference URI="#NFe26180707429484000138650010000279221001498151">
+                            <Transforms>
+                                <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                                <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+                            </Transforms>
+                            <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                            <DigestValue>Vz7OEUokogyeZZlX3Z2RMSGFweg=</DigestValue>
+                        </Reference>
+                    </SignedInfo>
+                    <SignatureValue>
+                        ari60ykQatbISK8zKwYNtn6O6scLP/N8yzOI4HASowjRNvAmh2MRnWMwV7+gnsX2eeOvUuCr0NU6i4l+4fZIX1xg2gRBnAbaSdiCHMbMoIZW7iR6NID3IG1ut2PgV0GUyl3Z8+jd3owrX4m/vUMlSO0g6yTEUSlCYn3t1eqeTFFCPcNWxdFG4X33O8/hnuXgReaEefJ/DgVeio3ByG569auJ5BJscmUM1pNF+mTAVqtZLkiKJzktGr3nHvFivBBtWPHc3jxfp7enT6aNyzw17RGWl8ZQ5xofWHkgTDc/jXN6yqoI9vYT8kEbZJfZ4cB29X1/RjVhN5/Dd0C9vFWLjg==
+                    </SignatureValue>
+                    <KeyInfo>
+                        <X509Data>
+                            <X509Certificate>
+                                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
+                            </X509Certificate>
+                        </X509Data>
+                    </KeyInfo>
+                </Signature>
+            </NFe>
+            <protNFe xmlns="http://www.portalfiscal.inf.br/nfe" versao="3.10">
+                <infProt>
+                    <tpAmb>1</tpAmb>
+                    <verAplic>SVRSnfce201806291346</verAplic>
+                    <chNFe>26180707429484000138650010000279221001498151</chNFe>
+                    <dhRecbto>2018-07-18T10:26:04-03:00</dhRecbto>
+                    <nProt>326180314511861</nProt>
+                    <digVal>Vz7OEUokogyeZZlX3Z2RMSGFweg=</digVal>
+                    <cStat>100</cStat>
+                    <xMotivo>Autorizado o uso da NF-e</xMotivo>
+                </infProt>
+            </protNFe>
+        </nfeProc>
+    </proc>
+    <protNFe>
+        <infProt>
+            <cStat>100</cStat>
+            <dhRecbto>2018-07-18T00:00:00</dhRecbto>
+            <nProt>326180314511861</nProt>
+        </infProt>
+    </protNFe>
+    null
+</nfeProc>

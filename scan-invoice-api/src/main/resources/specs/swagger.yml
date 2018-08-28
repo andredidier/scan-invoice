@@ -1,0 +1,145 @@
+openapi: 3.0.0
+
+info:
+  title: Scan Invoice API
+  description: Scans data from an Invoice
+  version: v1
+
+servers:
+  - url: http://localhost:8080/
+    description: Local developer environment
+  - url: {{protocol}}://{{environment}}-scaninvoice.lealdidier.com
+    variables:
+      protocol:
+        default: http
+        enum:
+          - http
+          - https
+      environment:
+        default: test
+        enum:
+          - test
+          - api
+
+paths:
+  /interpret:
+    post:
+      summary: Interprets data from an Invoice
+      operationId: interpret
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+        required: true
+        description: The contents to be interpreted.
+      parameters:
+        - in: header
+          name: If-None-Match
+          description: Used to control cache usage.
+          schema:
+            type: string
+        - in: header
+          name: Accept-Language
+          schema:
+            type: string
+      responses:
+        '200': #OK
+          description: The invoice has been created and the contents are in the body.
+        '202': #Accepted
+          description: The server started processing but it is taking longer than expected. The call should be sent again to obtain the actual contents.
+        '304': #Not modified
+          description: The server has processed the request and it is safe to use the cached value.
+        '204': #REMOVE IT
+          description: Spaws a processing thread and calls the callback URL when finishes. This is only returned if the X-Callback-Url is set.
+        '400':
+          description: Contents not supported, they do not match the regular expressions supported by this server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+  /invoice/:id:
+    get:
+      summary: Gets the contents of an invoice.
+      operationId: getInvoice
+      responses:
+        '200':
+          description: Gets the invoice by its id.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invoice'
+              examples:
+                no-items:
+                  $ref: '#/components/examples/invoice-without-items'
+                with-items:
+                  $ref: '#/components/examples/invoice-with-items'
+        '202':
+          description: Processing invoice.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+              example:
+                plain: Still processing invoice.
+                html: Still processing invoice.
+                language: en_US
+        '404':
+          description: Invoice not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/message'
+
+components:
+  examples:
+    invoice-without-items:
+      payee: Engenho Casa Forte
+      total: 27.5
+      date: 2018-07-22
+    invoice-with-items:
+      payee: Engenho Casa Forte
+      total: 27.5
+      date: 2018-07-22
+      items: [ {memo: Salgados, total: 7.5} ]
+    item1:
+      memo: Salgados
+      total: 7.5
+  schemas:
+    message:
+      type: object
+      properties:
+        plain:
+          type: string
+        html:
+          type: string
+        language:
+          type: string
+      required:
+        - plain
+        - html
+        - language
+
+    invoice:
+      type: object
+      properties:
+        payee:
+          type: string
+        total:
+          type: number
+        date:
+          type: string
+          format: date
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              memo:
+                type: string
+              total:
+                type: number
+      required:
+        - payee
+        - total
+        - date
