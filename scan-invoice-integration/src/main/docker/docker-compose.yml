@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+
+  v1api:
+    build:
+      context: ./api/v1
+      #args:
+      #  name: liferay-dxp-digital-enterprise-7.0-sp8
+    depends_on:
+      - db
+    ports:
+      - ${SCAN_INVOICE_V1_PORT:-4567}:4567
+    networks:
+      internal:
+        aliases:
+          - v1api
+    healthcheck:
+      test: CMD curl --silent --fail localhost:4567 || exit 1
+      interval: 60s
+      timeout: 20s
+      retries: 10
+    environment:
+      - SCAN_INVOICE_JDBC_URL=jdbc:postgresql://localhost/scaninvoice
+      - SCAN_INVOICE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SCAN_INVOICE_DB_USERNAME=postgres
+      - SCAN_INVOICE_DB_PASSWORD=pgadmin
+
+  db:
+    build:
+      context: ./db
+    ports:
+      - ${SCAN_INVOICE_DB_PORT:-5432}:5432
+    networks:
+      pitang-internal:
+        aliases:
+          - db
+#    healthcheck:
+#      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "liferay", "-pliferay"]
+#      timeout: 20s
+#      retries: 10
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pgadmin
+      - POSTGRES_DB=scaninvoice
+    volumes:
+      - database:/var/lib/postgresql/data
+
+networks:
+  internal:
+
+volumes:
+  database:

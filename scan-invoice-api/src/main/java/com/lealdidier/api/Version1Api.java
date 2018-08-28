@@ -34,7 +34,7 @@ public class Version1Api {
         );
     }
 
-    public void configure() {
+    public void configure(ApiConfiguration configuration) {
         Function<JSONObject, Media<RuntimeException>> exceptionMedia =
                 json -> new Media<RuntimeException>()
                 .addMapping(ExceptionFieldName.Message, (List<String> ls) -> json.put("message", ls))
@@ -56,8 +56,10 @@ public class Version1Api {
             post("/new", urlRequestApi);
             get("/poll?url=:url", urlPollApi);
         });
+        configuration.use();
     }
     public static void main(String[] args) {
-        new Version1Api(new EnvironmentDBCredentials()).configure();
+        new Version1Api(new EnvironmentDBCredentials()).configure(
+                new EnvironmentApiConfiguration("SCAN_INVOICE_V1_PORT"));
     }
 }
