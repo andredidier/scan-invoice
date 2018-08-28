@@ -13,7 +13,7 @@
     <artifactId>scan-invoice-static</artifactId>
     <name>Static</name>
     <version>${revision}</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.webjars/bootstrap -->
