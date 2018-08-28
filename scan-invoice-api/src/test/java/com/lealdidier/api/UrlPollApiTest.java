@@ -25,11 +25,11 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@DisplayName("API test for poll API")
+@DisplayName("Test API for URL Poll")
 public class UrlPollApiTest {
 
 
-    @DisplayName("Test same ETag, not processed")
+    @DisplayName("Same ETag, not processed")
     @Test
     public void testValidETagNotProcessed() throws Exception {
         DBCredentials credentials = mock(DBCredentials.class);
@@ -74,7 +74,7 @@ public class UrlPollApiTest {
     }
 
 
-    @DisplayName("Test same ETag, processed")
+    @DisplayName("Same ETag, processed")
     @Test
     public void testValidETagProcessed() throws Exception {
         DBCredentials credentials = mock(DBCredentials.class);
@@ -124,7 +124,7 @@ public class UrlPollApiTest {
 
 
 
-    @DisplayName("Test sent URL tag, but content already processed")
+    @DisplayName("Sent URL tag, but content already processed")
     @Test
     public void testInvalidETagProcessed() throws Exception {
         DBCredentials credentials = mock(DBCredentials.class);
@@ -171,7 +171,7 @@ public class UrlPollApiTest {
 
     }
 
-    @DisplayName("Test first request, not posted")
+    @DisplayName("First request, not posted")
     @Test
     void testFirstRequestNotRegistered() throws Exception {
         DBCredentials credentials = mock(DBCredentials.class);
@@ -207,7 +207,7 @@ public class UrlPollApiTest {
         verify(conn, times(1)).close();
     }
 
-    @DisplayName("Test first request, posted, but not processed yet")
+    @DisplayName("First request, posted, but not processed yet")
     @Test
     void testFirstRequest() throws Exception {
         DBCredentials credentials = mock(DBCredentials.class);
@@ -243,7 +243,7 @@ public class UrlPollApiTest {
         verify(conn, times(1)).close();
     }
 
-    @DisplayName("Test first request, posted, processed")
+    @DisplayName("First request, posted, processed")
     @Test
     void testFirstRequestAndProcessedTransaction() throws Exception {
         DBCredentials credentials = mock(DBCredentials.class);

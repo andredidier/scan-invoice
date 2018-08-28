@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 @DisplayName("Test API for URL Request")
 public class UrlRequestApiTest {
 
-    @DisplayName("Test first request to create transaction, returns with success")
+    @DisplayName("First request to create transaction, returns with success")
     @Test
     void testFirstRequest() throws Exception {
         DBCredentials credentials = mock(DBCredentials.class);
@@ -73,7 +73,7 @@ public class UrlRequestApiTest {
         verify(conn, times(1)).close();
     }
 
-    @DisplayName("Test second request to query processed result with success")
+    @DisplayName("Second request to query processed result with success")
     @Test
     void testSecondRequest() throws Exception {
         DBCredentials credentials = mock(DBCredentials.class);

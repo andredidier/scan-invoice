@@ -1,21 +1,21 @@
 package com.lealdidier.api;
 
-import com.amazonaws.services.xray.model.Http;
 import com.lealdidier.media.Media;
 import com.lealdidier.media.MediaFieldConfiguration;
 import com.lealdidier.sql.DBCredentials;
 import com.lealdidier.sql.DBException;
+import com.lealdidier.sql.EnvironmentDBCredentials;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import spark.Response;
+import spark.Spark;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static spark.Spark.exception;
-import static spark.Spark.post;
+import static spark.Spark.*;
 
 public class Version1Api {
 
@@ -52,6 +52,12 @@ public class Version1Api {
             res.status(HttpStatus.SC_SERVICE_UNAVAILABLE);
             h.apply(e).accept(res);
         });
-        post("/transaction", urlRequestApi);
+        path("/transaction", () -> {
+            post("/new", urlRequestApi);
+            get("/poll?url=:url", urlPollApi);
+        });
+    }
+    public static void main(String[] args) {
+        new Version1Api(new EnvironmentDBCredentials()).configure();
     }
 }
