@@ -1,0 +1,8 @@
+input[type='text']:placeholder-shown {
+    background-color: #A00
+}
+
+input[type='text']:not(:placeholder-shown) {
+    background-color: #0A0
+}
+
