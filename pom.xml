@@ -21,6 +21,7 @@
     <modules>
         <module>scan-invoice-api</module>
         <module>scan-invoice-static</module>
+        <!--<module>scan-invoice-integration</module>-->
     </modules>
 
     <dependencies>
