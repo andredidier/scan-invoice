@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public enum TransactionDBStatement implements DBStatement {
-    Insert("INSERT INTO TRANSACTION (URL, CreateDate, UpdateDate) VALUES (?,?,?)"),
+    Insert("INSERT INTO TRANSACTION (URL, CreateDate, UpdateDate, PROCESSED) VALUES (?,?,?,?)"),
     QueryJson("SELECT t1.JSON from TRANSACTION WHERE t1.URL=?"),
     UpdateXmlJson("UPDATE TRANSACTION SET XML=?, JSON=?, UpdateDate=? WHERE URL=?", QueryJson);
 

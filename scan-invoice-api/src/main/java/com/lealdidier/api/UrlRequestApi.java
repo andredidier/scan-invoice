@@ -66,9 +66,10 @@ public class UrlRequestApi implements Route {
     private void saveRequest(Transaction t, Connection conn) throws DBException {
         Date date = new Date(new java.util.Date().getTime());
         DBStatement statement = TransactionDBStatement.Insert;
-        try(PreparedStatement ps = conn.prepareStatement(statement.sql())) {
+        try (PreparedStatement ps = conn.prepareStatement(statement.sql())) {
             ps.setDate(2, date);
             ps.setDate(3, date);
+            ps.setBoolean(4, false);
             t.addTo(new Media<SQLException>()
                     .addMapping(TransactionField.URL, url -> ps.setString(1, url.toString()))
             ).writeFields();

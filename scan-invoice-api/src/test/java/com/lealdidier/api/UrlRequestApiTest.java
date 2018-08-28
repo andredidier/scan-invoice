@@ -59,9 +59,13 @@ public class UrlRequestApiTest {
         verify(response, times(0)).header(eq(HttpHeaders.CACHE_CONTROL), anyString());
         verify(ps1, times(1)).setString(1, url.toString());
         verify(rs, times(1)).next();
+        verify(rs, times(0)).getString("PROCESSED");
         verify(rs, times(0)).getString("JSON");
         verify(rs, times(0)).getString("XML");
         verify(rs, times(0)).getString("URL");
+        verify(ps2, times(1)).setDate(eq(2), any());
+        verify(ps2, times(1)).setDate(eq(3), any());
+        verify(ps2, times(1)).setBoolean(4, false);
         verify(ps2, times(1)).execute();
         verify(rs, times(1)).close();
         verify(ps1, times(1)).close();
@@ -96,6 +100,7 @@ public class UrlRequestApiTest {
         verify(response, times(0)).header(eq(HttpHeaders.CACHE_CONTROL), anyString());
         verify(ps1, times(1)).setString(1, url.toString());
         verify(rs, times(1)).next();
+        verify(rs, times(0)).getString("PROCESSED");
         verify(rs, times(0)).getString("JSON");
         verify(rs, times(0)).getString("XML");
         verify(rs, times(0)).getString("URL");

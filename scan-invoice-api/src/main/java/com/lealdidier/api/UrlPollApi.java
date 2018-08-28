@@ -19,6 +19,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.*;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UrlPollApi implements Route {
 
@@ -58,51 +60,48 @@ public class UrlPollApi implements Route {
             if (rs.next()) {
                 t = new ResultSetTransaction(rs, "URL", "XML", "JSON");
                 if (rs.getBoolean("PROCESSED")) {
-                    //TODO falta implementar
+                    handleProcessed(t, request, response);
                 } else {
                     handleNotProcessedHeader(url, request, response);
                 }
             } else {
                 t = new UrlXmlInvoiceTransaction(url);
-                saveRequest(t, conn, response);
-                response.status(HttpStatus.SC_CREATED);
-                t.addTo(new Media<IOException>()
-                        .addMapping(TransactionField.JSON, (JSONObject j) -> response.body(j.toString()))
-                ).writeFields();
+                response.status(HttpStatus.SC_NOT_FOUND);
+                response.header(HttpHeaders.CACHE_CONTROL, "no-cache,no-store,must-revalidate");
             }
         } catch (SQLException e) {
             throw new DBException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
+    }
+
+    private void handleProcessed(Transaction t, Request request, Response response) {
+        Map<String, String> tData = new HashMap<>();
+        t.addTo(new Media<RuntimeException>().addMapping(TransactionField.JSON, (JSONObject json) -> tData.put("json", json.toString()))).writeFields();
+        String hash = new AsciiHash().apply(tData.get("json"));
+        if (containsHeaderWithValue(HttpHeaders.IF_NONE_MATCH, hash, request)) {
+            response.status(HttpStatus.SC_NOT_MODIFIED);
+        } else {
+            response.status(HttpStatus.SC_OK);
+            response.body(tData.get("json"));
+        }
+        response.header(HttpHeaders.CACHE_CONTROL, String.format("public,max-age=%s", longCache.toSeconds()));
+        response.header(HttpHeaders.ETAG, hash);
+    }
+
+    private boolean containsHeaderWithValue(String header, String value, Request request) {
+        String headerValue = request.headers(header);
+        return headerValue != null && headerValue.equals(value);
     }
 
     private void handleNotProcessedHeader(URL url, Request request, Response response) {
         String urlHash = new AsciiHash().apply(url.toString());
-        if (request.headers(HttpHeaders.IF_NONE_MATCH).equals(urlHash)) {
+        if (containsHeaderWithValue(HttpHeaders.IF_NONE_MATCH, urlHash, request)) {
             response.status(HttpStatus.SC_NOT_MODIFIED);
         } else {
             response.status(HttpStatus.SC_ACCEPTED);
         }
         response.header(HttpHeaders.CACHE_CONTROL, String.format("public,max-age=%s", shortCache.toSeconds()));
         response.header(HttpHeaders.ETAG, urlHash);
-    }
-
-    private void saveRequest(Transaction t, Connection conn, Response response) throws DBException {
-        Date date = new Date(new java.util.Date().getTime());
-        DBStatement statement = TransactionDBStatement.Insert;
-        try(PreparedStatement ps = conn.prepareStatement(statement.sql())) {
-            ps.setDate(2, date);
-            ps.setDate(3, date);
-            t.addTo(new Media<SQLException>()
-                    .addMapping(TransactionField.URL, url -> ps.setString(1, url.toString()))
-            ).writeFields();
-            if (!ps.execute()) {
-                throw new StatementNotRunException(statement, "?", date, date);
-            }
-        } catch (SQLException e) {
-            throw new DBException(e);
-        }
     }
 
     private URL createUrl(String url) {
